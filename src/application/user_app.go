@@ -5,28 +5,28 @@ import (
 	"github.com/andrersp/financeiro-go/src/domain/repository"
 )
 
-type userApp struct {
+type UserApp struct {
 	repository repository.UserRepository
 }
 
 func NewUserApp(repository repository.UserRepository) repository.UserRepository {
-	return &userApp{
+	return &UserApp{
 		repository: repository,
 	}
 }
 
-func (u *userApp) SaveUser(userData entity.User) (user *entity.User, err error) {
+func (u *UserApp) SaveUser(userData entity.User) (user *entity.User, err error) {
 	return
 }
 
-func (u *userApp) GetUser(userId uint64) (user *entity.User, err error) {
+func (u *UserApp) GetUser(userId uint64) (user *entity.User, err error) {
 	return
 }
 
-func (u *userApp) GetUsers() (users []entity.User, err error) {
+func (u *UserApp) GetUsers() (users []entity.User, err error) {
 	return
 }
 
-func (u *userApp) GetUserByEmail(email string) (user *entity.User, err error) {
+func (u *UserApp) GetUserByEmail(email string) (user *entity.User, err error) {
 	return
 }

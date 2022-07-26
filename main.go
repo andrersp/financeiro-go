@@ -5,8 +5,9 @@ import (
 	"log"
 
 	"github.com/andrersp/financeiro-go/src/config"
-	"github.com/andrersp/financeiro-go/src/domain/entity"
 	"github.com/andrersp/financeiro-go/src/infra/persistence"
+	"github.com/andrersp/financeiro-go/src/interfaces"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -28,16 +29,23 @@ func main() {
 
 	services.AutoMigrate()
 
-	user := entity.User{
-		FirstName: "Andre F",
-		LastName:  "Luis",
-		Password:  "andreluis",
-	}
+	users := interfaces.NewUserHandler(services.User)
 
-	r, err := services.User.SaveUser(user)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(*r)
+	r := gin.Default()
+	r.POST("/user", users.SaveUser)
+
+	r.Run()
+
+	// user := entity.User{
+	// 	FirstName: "Andre F",
+	// 	LastName:  "Luis",
+	// 	Password:  "andreluis",
+	// }
+
+	// r, err := services.User.SaveUser(user)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// fmt.Println(*r)
 
 }

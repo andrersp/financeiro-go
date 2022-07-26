@@ -10,12 +10,18 @@ import (
 )
 
 type User struct {
-	ID        uint64    `json:"id"`
+	ID        uint64    `json:"id" `
 	FirstName string    `json:"first_name"`
 	LastName  string    `json:"last_name"`
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"created_at"`
+}
+
+type PublicUser struct {
+	ID        uint64 `json:"id"`
+	FirstName string `json:"first_name"`
+	Email     string `json:"email"`
 }
 
 func (u *User) Prepare() {
@@ -33,4 +39,13 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	u.Password = string(hash)
 
 	return
+}
+
+//So that we dont expose the user's email address and password to the world
+func (u *User) PublicUser() interface{} {
+	return &PublicUser{
+		ID:        u.ID,
+		FirstName: u.FirstName,
+		Email:     u.Email,
+	}
 }
