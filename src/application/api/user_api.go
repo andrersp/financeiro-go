@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/andrersp/financeiro-go/src/domain/entity"
@@ -78,8 +79,14 @@ func (u *userApi) GetUser(c *gin.Context) {
 
 	// userID, err := strconv.ParseUint(c.Param("userID"), 10, 64)
 
-	token, err := u.token.ExtractToken(c)
-	userID := *&token.UserID
+	access_detail, err := u.token.ExtractTokenAcessDetail(c)
+	userID := *&access_detail.UserID
+
+	token, err := u.token.CreateToken(1)
+	if err != nil {
+		return
+	}
+	fmt.Println(*token)
 
 	if err != nil {
 		return
