@@ -29,7 +29,7 @@ func (u *userRepo) SaveUser(userData entity.User) (user *entity.User, err error)
 
 func (u *userRepo) GetUser(userID uint64) (user *entity.User, err error) {
 
-	err = u.db.First(&user, userID).Error
+	err = u.db.Debug().First(&user, userID).Error
 
 	return
 

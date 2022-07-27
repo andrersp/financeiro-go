@@ -3,16 +3,17 @@ package api
 import (
 	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/andrersp/financeiro-go/src/domain/entity"
 	"github.com/andrersp/financeiro-go/src/domain/repository"
+	"github.com/andrersp/financeiro-go/src/infra/auth"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type userApi struct {
 	repository repository.UserRepository
+	token      auth.TokenInterface
 }
 
 type UserAppInterface interface {
@@ -22,9 +23,10 @@ type UserAppInterface interface {
 	// GetUserByEmail(c *gin.Context)
 }
 
-func NewUserApi(repository repository.UserRepository) UserAppInterface {
+func NewUserApi(repository repository.UserRepository, token auth.TokenInterface) UserAppInterface {
 	return &userApi{
 		repository: repository,
+		token:      token,
 	}
 }
 
@@ -74,7 +76,10 @@ func (u *userApi) SaveUser(c *gin.Context) {
 
 func (u *userApi) GetUser(c *gin.Context) {
 
-	userID, err := strconv.ParseUint(c.Param("userID"), 10, 64)
+	// userID, err := strconv.ParseUint(c.Param("userID"), 10, 64)
+
+	token, err := u.token.ExtractToken(c)
+	userID := *&token.UserID
 
 	if err != nil {
 		return
