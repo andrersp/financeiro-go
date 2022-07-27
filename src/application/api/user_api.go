@@ -40,6 +40,18 @@ func (u *userApi) SaveUser(c *gin.Context) {
 
 	}
 
+	// Validate User
+	if err := user.Validate(""); err != nil {
+		c.AbortWithStatusJSON(
+			http.StatusUnprocessableEntity,
+			gin.H{
+				"error": err.Error(),
+			},
+		)
+		return
+
+	}
+
 	newUser, err := u.repository.SaveUser(user)
 
 	if err != nil {

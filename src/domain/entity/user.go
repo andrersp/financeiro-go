@@ -1,11 +1,13 @@
 package entity
 
 import (
+	"errors"
 	"html"
 	"strings"
 	"time"
 
 	"github.com/andrersp/financeiro-go/src/infra/security"
+	"github.com/badoux/checkmail"
 	"gorm.io/gorm"
 )
 
@@ -48,4 +50,51 @@ func (u *User) PublicUser() interface{} {
 		FirstName: u.FirstName,
 		Email:     u.Email,
 	}
+}
+
+func (u *User) Validate(action string) (err error) {
+
+	if u.Email == "" {
+		err = errors.New("email is required")
+		return
+
+	}
+
+	if err = checkmail.ValidateFormat(u.Email); err != nil {
+		err = errors.New("please provide a valid email")
+		return
+
+	}
+
+	switch strings.ToLower(action) {
+	case "update":
+		return
+
+	case "login":
+		if u.Password == "" {
+			err = errors.New("password is required")
+			return
+		}
+	case "forgotpassword":
+		return
+	default:
+		if u.FirstName == "" {
+			err = errors.New("first name is required")
+			return
+		}
+		if u.LastName == "" {
+			err = errors.New("last name is required")
+			return
+		}
+		if u.Password == "" {
+			err = errors.New("password is required")
+			return
+		}
+		if u.Password != "" && len(u.Password) < 6 {
+			err = errors.New("password should be at least 6 characters")
+			return
+		}
+
+	}
+	return
 }
