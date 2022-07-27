@@ -1,32 +1,39 @@
 package application
 
 import (
-	"github.com/andrersp/financeiro-go/src/domain/entity"
 	"github.com/andrersp/financeiro-go/src/domain/repository"
+	"github.com/gin-gonic/gin"
 )
 
-type UserApp struct {
-	repository repository.UserRepository
+type userApp struct {
+	us repository.UserRepository
 }
 
-func NewUserApp(repository repository.UserRepository) repository.UserRepository {
-	return &UserApp{
-		repository: repository,
-	}
+//UserApp implements the UserAppInterface
+// var _ UserAppInterface = &userApp{}
+
+type UserAppInterface interface {
+	SaveUser(c *gin.Context)
+	GetUser(c *gin.Context)
+	GetUsers(c *gin.Context)
+	// GetUserByEmail(c *gin.Context)
 }
 
-func (u *UserApp) SaveUser(userData entity.User) (user *entity.User, err error) {
-	return
-}
+// func (u *userApp) SaveUser(userData entity.User) (user *entity.User, err error) {
+// 	return u.us.SaveUser(userData)
 
-func (u *UserApp) GetUser(userId uint64) (user *entity.User, err error) {
-	return
-}
+// }
 
-func (u *UserApp) GetUsers() (users []entity.User, err error) {
-	return
-}
+// func (u *userApp) GetUser(userId uint64) (user *entity.User, err error) {
 
-func (u *UserApp) GetUserByEmail(email string) (user *entity.User, err error) {
-	return
-}
+// 	fmt.Println("Aqui ")
+// 	return
+// }
+
+// func (u *userApp) GetUsers() (users []entity.User, err error) {
+// 	return
+// }
+
+// func (u *userApp) GetUserByEmail(email string) (user *entity.User, err error) {
+// 	return
+// }

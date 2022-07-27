@@ -5,14 +5,15 @@ import (
 
 	"github.com/andrersp/financeiro-go/src/application"
 	"github.com/andrersp/financeiro-go/src/domain/entity"
+	"github.com/andrersp/financeiro-go/src/domain/repository"
 	"github.com/gin-gonic/gin"
 )
 
 type User struct {
-	userApp application.UserAppInterface
+	userApp repository.UserRepository
 }
 
-func NewUserHandler(userAppInterface application.UserAppInterface) *User {
+func NewUserHandler(userAppInterface repository.UserRepository) application.UserAppInterface {
 	return &User{
 		userApp: userAppInterface,
 	}
