@@ -1,11 +1,14 @@
 package api
 
 import (
+	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/andrersp/financeiro-go/src/domain/entity"
 	"github.com/andrersp/financeiro-go/src/domain/repository"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type userApi struct {
@@ -71,16 +74,30 @@ func (u *userApi) SaveUser(c *gin.Context) {
 
 func (u *userApi) GetUser(c *gin.Context) {
 
-	users, err := u.repository.GetUsers()
+	userID, err := strconv.ParseUint(c.Param("userID"), 10, 64)
 
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err,
+		return
+	}
+	user, err := u.repository.GetUser(userID)
+
+	if err != nil {
+
+		if errors.Is(gorm.ErrRecordNotFound, err) {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+				"msg": "User not found",
+			})
+			return
+		}
+
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"msg": "internal error",
 		})
 		return
 	}
-
-	c.JSON(200, users)
+	c.JSON(http.StatusOK, gin.H{
+		"data": user.PublicUser(),
+	})
 
 }
 

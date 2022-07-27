@@ -18,6 +18,11 @@ func loadUserRouters(userService repository.UserRepository) []Routers {
 			URI:    "/user",
 			Func:   user.GetUsers,
 		},
+		{
+			Method: "GET",
+			URI:    "/user/:userID",
+			Func:   user.GetUser,
+		},
 	}
 	return routers
 }
