@@ -31,7 +31,14 @@ func (u *userRepo) GetUser(userID uint64) (user *entity.User, err error) {
 	return
 }
 
-func (u *userRepo) GetUsers() (uers []entity.User, err error) {
+func (u *userRepo) GetUsers() (users []entity.PublicUser, err error) {
+
+	query := u.db.Debug().Model(&entity.User{}).Find(&users)
+
+	if err = query.Error; err != nil {
+		return
+	}
+
 	return
 }
 

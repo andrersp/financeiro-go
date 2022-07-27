@@ -6,7 +6,7 @@ import (
 )
 
 type userApp struct {
-	us repository.UserRepository
+	repository repository.UserRepository
 }
 
 //UserApp implements the UserAppInterface
