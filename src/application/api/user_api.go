@@ -2,11 +2,11 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/andrersp/financeiro-go/src/domain/entity"
 	"github.com/andrersp/financeiro-go/src/domain/repository"
+	"github.com/andrersp/financeiro-go/src/http/response"
 	"github.com/andrersp/financeiro-go/src/infra/auth"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -36,24 +36,14 @@ func (u *userApi) SaveUser(c *gin.Context) {
 	var user entity.User
 
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.AbortWithStatusJSON(
-			http.StatusUnprocessableEntity,
-			gin.H{
-				"error": err.Error(),
-			},
-		)
+		response.Error(c, http.StatusUnprocessableEntity, err)
 		return
 
 	}
 
 	// Validate User
 	if err := user.Validate(""); err != nil {
-		c.AbortWithStatusJSON(
-			http.StatusUnprocessableEntity,
-			gin.H{
-				"error": err.Error(),
-			},
-		)
+		response.Error(c, http.StatusBadRequest, err)
 		return
 
 	}
@@ -61,17 +51,12 @@ func (u *userApi) SaveUser(c *gin.Context) {
 	newUser, err := u.repository.SaveUser(user)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Internal error",
-		})
+		response.Error(c, http.StatusInternalServerError, errors.New("Internal server error"))
 		return
 
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
-		"success": true,
-		"data":    newUser.PublicUser(),
-	})
+	response.Success(c, http.StatusCreated, newUser.PublicUser())
 
 }
 
@@ -80,36 +65,23 @@ func (u *userApi) GetUser(c *gin.Context) {
 	// userID, err := strconv.ParseUint(c.Param("userID"), 10, 64)
 
 	access_detail, err := u.token.ExtractTokenAcessDetail(c)
-	userID := *&access_detail.UserID
+	userID := access_detail.UserID
 
-	token, err := u.token.CreateToken(1)
-	if err != nil {
-		return
-	}
-	fmt.Println(*token)
-
-	if err != nil {
-		return
-	}
 	user, err := u.repository.GetUser(userID)
 
 	if err != nil {
 
 		if errors.Is(gorm.ErrRecordNotFound, err) {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-				"msg": "User not found",
-			})
+			response.Error(c, http.StatusNotFound, errors.New("user not found"))
+
 			return
 		}
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"msg": "internal error",
-		})
+		response.Error(c, http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"data": user.PublicUser(),
-	})
+
+	response.Success(c, http.StatusOK, user.PublicUser())
 
 }
 
@@ -118,12 +90,10 @@ func (u *userApi) GetUsers(c *gin.Context) {
 	users, err := u.repository.GetUsers()
 
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err,
-		})
+		response.Error(c, http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(200, users)
+	response.Success(c, http.StatusOK, users)
 
 }

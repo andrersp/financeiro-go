@@ -9,21 +9,31 @@ import (
 func loadUserRouters(userService repository.UserRepository) []Routers {
 	token := auth.NewToken()
 	user := api.NewUserApi(userService, token)
+
+	login := api.NewLoginApi(userService, token)
 	routers := []Routers{
 		{
+			Method:      "POST",
+			URI:         "/users",
+			Func:        user.SaveUser,
+			RequireAuth: false,
+		},
+		{
+			Method:      "GET",
+			URI:         "/users",
+			Func:        user.GetUsers,
+			RequireAuth: true,
+		},
+		{
+			Method:      "GET",
+			URI:         "/users/:userID",
+			Func:        user.GetUser,
+			RequireAuth: true,
+		},
+		{
 			Method: "POST",
-			URI:    "/users",
-			Func:   user.SaveUser,
-		},
-		{
-			Method: "GET",
-			URI:    "/users",
-			Func:   user.GetUsers,
-		},
-		{
-			Method: "GET",
-			URI:    "/users/:userID",
-			Func:   user.GetUser,
+			URI:    "/login",
+			Func:   login.Login,
 		},
 	}
 	return routers

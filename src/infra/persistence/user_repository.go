@@ -47,5 +47,7 @@ func (u *userRepo) GetUsers() (users []entity.PublicUser, err error) {
 }
 
 func (u *userRepo) GetUserByEmail(email string) (user *entity.User, err error) {
+
+	err = u.db.Debug().Model(&entity.User{}).Where("email =  ?", email).First(&user).Error
 	return
 }

@@ -1,14 +1,16 @@
 package http
 
 import (
+	"github.com/andrersp/financeiro-go/src/http/middleware"
 	"github.com/andrersp/financeiro-go/src/infra/persistence"
 	"github.com/gin-gonic/gin"
 )
 
 type Routers struct {
-	URI    string
-	Func   func(c *gin.Context)
-	Method string
+	URI         string
+	Func        func(c *gin.Context)
+	Method      string
+	RequireAuth bool
 }
 
 func loadRouters(services persistence.Repositories, r *gin.Engine) *gin.Engine {
@@ -20,7 +22,15 @@ func loadRouters(services persistence.Repositories, r *gin.Engine) *gin.Engine {
 	v1 := r.Group("v1")
 
 	for _, router := range routers {
-		v1.Handle(router.Method, router.URI, router.Func)
+
+		if router.RequireAuth {
+			v1.Handle(router.Method, router.URI, middleware.AuthMiddleware(), router.Func)
+
+		} else {
+			v1.Handle(router.Method, router.URI, router.Func)
+
+		}
+
 	}
 
 	return r
