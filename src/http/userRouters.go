@@ -31,9 +31,10 @@ func loadUserRouters(userService repository.UserRepository) []Routers {
 			RequireAuth: true,
 		},
 		{
-			Method: "POST",
-			URI:    "/login",
-			Func:   login.Login,
+			Method:      "POST",
+			URI:         "/login",
+			Func:        login.Login,
+			RequireAuth: false,
 		},
 	}
 	return routers

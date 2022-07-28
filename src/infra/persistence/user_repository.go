@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	"fmt"
+
 	"github.com/andrersp/financeiro-go/src/domain/entity"
 	"github.com/andrersp/financeiro-go/src/domain/repository"
 	"gorm.io/gorm"
@@ -20,6 +22,7 @@ func (u *userRepo) SaveUser(userData entity.User) (user *entity.User, err error)
 
 	err = u.db.Debug().Create(&userData).Error
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	user = &userData
