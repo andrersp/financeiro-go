@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
 
@@ -22,7 +22,7 @@ type AccessDetail struct {
 
 type TokenInterface interface {
 	CreateToken(userID uint64) (token *TokenDetails, err error)
-	ExtractTokenAcessDetail(c *gin.Context) (access_detail *AccessDetail, err error)
+	ExtractTokenAcessDetail(r *http.Request) (access_detail *AccessDetail, err error)
 }
 
 type Token struct {
@@ -53,11 +53,27 @@ func (t *Token) CreateToken(userID uint64) (token *TokenDetails, err error) {
 
 }
 
-func (t *Token) ExtractTokenAcessDetail(c *gin.Context) (access_detail *AccessDetail, err error) {
+func (t *Token) ExtractTokenAcessDetail(r *http.Request) (access_detail *AccessDetail, err error) {
 
-	access_detail = &AccessDetail{
-		UserID: 1,
+	token, err := VerifyToken(r)
+
+	var userID uint64
+
+	if err != nil {
+		return
 	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if ok && token.Valid {
+		userID, err = strconv.ParseUint(fmt.Sprintf("%.0f", claims["user_id"]), 10, 64)
+		if err != nil {
+			return
+		}
+		access_detail = &AccessDetail{
+			UserID: userID,
+		}
+	}
+
 	return
 }
 

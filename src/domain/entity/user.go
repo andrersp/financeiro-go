@@ -68,7 +68,14 @@ func (u *User) Validate(action string) (err error) {
 
 	switch strings.ToLower(action) {
 	case "update":
-		return
+		if u.FirstName == "" {
+			err = errors.New("first name is required")
+			return
+		}
+		if u.LastName == "" {
+			err = errors.New("last name is required")
+			return
+		}
 
 	case "login":
 		if u.Password == "" {

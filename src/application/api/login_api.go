@@ -20,7 +20,6 @@ type loginApi struct {
 
 type LoginApiInterface interface {
 	Login(c *gin.Context)
-	// GetUserByEmail(c *gin.Context)
 }
 
 func NewLoginApi(userRepo repository.UserRepository, token auth.TokenInterface) LoginApiInterface {
@@ -68,6 +67,6 @@ func (l *loginApi) Login(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, http.StatusOK, tokenData)
+	c.JSON(200, tokenData)
 
 }

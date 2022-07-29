@@ -1,6 +1,7 @@
 package response
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,6 +32,11 @@ func Success(c *gin.Context, statusCode int, data interface{}) {
 }
 
 func Error(c *gin.Context, statusCode int, err error) {
+
+	if statusCode == http.StatusInternalServerError {
+		err = errors.New("Internal error server")
+	}
+
 	result := DataResponse{
 		Success: false,
 		Err:     err.Error(),

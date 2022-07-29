@@ -7,4 +7,5 @@ type UserRepository interface {
 	GetUser(userID uint64) (user *entity.User, err error)
 	GetUsers() (users []entity.PublicUser, err error)
 	GetUserByEmail(email string) (user *entity.User, err error)
+	UpdateUser(userData entity.User) (user *entity.User, err error)
 }

@@ -21,15 +21,16 @@ func loadUserRouters(userService repository.UserRepository) []Routers {
 		{
 			Method:      "GET",
 			URI:         "/users",
-			Func:        user.GetUsers,
-			RequireAuth: true,
-		},
-		{
-			Method:      "GET",
-			URI:         "/users/:userID",
 			Func:        user.GetUser,
 			RequireAuth: true,
 		},
+		{
+			Method:      "PUT",
+			URI:         "/users",
+			Func:        user.UpdateUser,
+			RequireAuth: true,
+		},
+
 		{
 			Method:      "POST",
 			URI:         "/login",
