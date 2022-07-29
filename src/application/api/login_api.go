@@ -6,7 +6,8 @@ import (
 
 	"github.com/andrersp/financeiro-go/src/domain/entity"
 	"github.com/andrersp/financeiro-go/src/domain/repository"
-	"github.com/andrersp/financeiro-go/src/http/response"
+	"github.com/andrersp/financeiro-go/src/interfaces/response"
+
 	"github.com/andrersp/financeiro-go/src/infra/auth"
 	"github.com/andrersp/financeiro-go/src/infra/security"
 	"github.com/gin-gonic/gin"

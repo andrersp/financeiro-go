@@ -1,8 +1,8 @@
-package http
+package interfaces
 
 import (
-	"github.com/andrersp/financeiro-go/src/http/middleware"
 	"github.com/andrersp/financeiro-go/src/infra/persistence"
+	"github.com/andrersp/financeiro-go/src/interfaces/middleware"
 	"github.com/gin-gonic/gin"
 )
 

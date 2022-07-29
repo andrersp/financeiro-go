@@ -1,4 +1,4 @@
-package http
+package interfaces
 
 import (
 	"github.com/andrersp/financeiro-go/src/application/api"

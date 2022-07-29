@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/andrersp/financeiro-go/src/config"
-	"github.com/andrersp/financeiro-go/src/http"
 	"github.com/andrersp/financeiro-go/src/infra/persistence"
+	"github.com/andrersp/financeiro-go/src/interfaces"
 	"github.com/joho/godotenv"
 )
 
@@ -46,7 +46,7 @@ func main() {
 
 	services.AutoMigrate()
 
-	r := http.StartServer(*services)
+	r := interfaces.StartServer(*services)
 	r.Run()
 
 }
